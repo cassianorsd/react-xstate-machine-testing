@@ -1,6 +1,7 @@
-import { Machine,assign } from 'xstate';
+import { Machine,assign,spawn} from 'xstate';
 import { createContext } from 'react'
-import {auth} from './auth'
+import {auth} from './auth';
+import { createStoryMachine } from './story'
 export const MachineContext = createContext()
 
 
@@ -27,6 +28,7 @@ export const appMachine = Machine({
     user: undefined,  
     error: undefined,
     stories: [],
+    selectedStory: undefined
   },
   states: {
     init: {},
@@ -49,8 +51,14 @@ export const appMachine = Machine({
           }
         },
         success:{},
-        fail:{}
+        fail:{},
+        selected:{}
       },
+    },
+    stories: {
+      states: {
+        selected: {}
+      }
     }
   },
   on: {
@@ -59,6 +67,13 @@ export const appMachine = Machine({
     },
     LOAD_STORIES:{
       target:'list.loading'
+    },
+    SELECT_STORY: {
+      target: 'stories.selected',
+      actions: assign((context, event) => {
+        const newStoryMachine = spawn(createStoryMachine(event.story));
+        return { selectedStory: newStoryMachine };
+      })
     }
   }
 });

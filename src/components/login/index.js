@@ -18,10 +18,10 @@ function Login(){
     <div>
       <h1>Login</h1>
       <div>
-        <input type='text' placeholder='username' ref={userRef}/>
+        <input type='text' placeholder='username' defaultValue="demo" ref={userRef}/>
       </div>
       <div>
-        <input type='password' placeholder='password' ref={passRef}/>
+        <input type='password' placeholder='password' defaultValue="demo" ref={passRef}/>
       </div>
       {machine.matches('auth.fail') && (
         <div>
